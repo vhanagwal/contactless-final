@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		16E5DF1565997686ED550795 /* Pods_ContactlessUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 879439784A91912DE1BE7A23 /* Pods_ContactlessUITests.framework */; };
 		CBA919410BE3E8F02E8DB171 /* Pods_Contactless.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD60B8D6D456EA83925F9C80 /* Pods_Contactless.framework */; };
+		DA24C1981F58F15A00E6F99A /* Contactless-Bridging-Header.m in Sources */ = {isa = PBXBuildFile; fileRef = DA24C1971F58F15A00E6F99A /* Contactless-Bridging-Header.m */; };
+		DA24C19A1F5A720500E6F99A /* TableState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA24C1991F5A720500E6F99A /* TableState.swift */; };
 		DA7F83181F49F5F700870C27 /* AddContactVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7F83171F49F5F700870C27 /* AddContactVC.swift */; };
 		DA98289D1F3E2E880084D25E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA98289C1F3E2E880084D25E /* AppDelegate.swift */; };
 		DA98289F1F3E2E880084D25E /* ContactListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA98289E1F3E2E880084D25E /* ContactListVC.swift */; };
@@ -51,6 +53,9 @@
 		879439784A91912DE1BE7A23 /* Pods_ContactlessUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ContactlessUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD0D4A8AF81ED5A567A3ACFC /* Pods-ContactlessTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ContactlessTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ContactlessTests/Pods-ContactlessTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C87EAC8C6FBF56DC926E63C0 /* Pods-Contactless.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Contactless.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Contactless/Pods-Contactless.debug.xcconfig"; sourceTree = "<group>"; };
+		DA24C1961F58F15900E6F99A /* Contactless-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Contactless-Bridging-Header.h"; sourceTree = "<group>"; };
+		DA24C1971F58F15A00E6F99A /* Contactless-Bridging-Header.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Contactless-Bridging-Header.m"; sourceTree = "<group>"; };
+		DA24C1991F5A720500E6F99A /* TableState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableState.swift; sourceTree = "<group>"; };
 		DA7F83171F49F5F700870C27 /* AddContactVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddContactVC.swift; sourceTree = "<group>"; };
 		DA9828991F3E2E880084D25E /* Contactless.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Contactless.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA98289C1F3E2E880084D25E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -149,6 +154,8 @@
 			children = (
 				DA98289C1F3E2E880084D25E /* AppDelegate.swift */,
 				DA9828D31F3E31A70084D25E /* DataService.swift */,
+				DA24C1971F58F15A00E6F99A /* Contactless-Bridging-Header.m */,
+				DA24C1961F58F15900E6F99A /* Contactless-Bridging-Header.h */,
 				DADC9D301F4E6DD800141650 /* Model */,
 				DA9828D51F3E37D40084D25E /* View */,
 				DA9828D61F3E37DD0084D25E /* Controller */,
@@ -195,6 +202,7 @@
 		DA9828D61F3E37DD0084D25E /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				DA24C1991F5A720500E6F99A /* TableState.swift */,
 				DA98289E1F3E2E880084D25E /* ContactListVC.swift */,
 				DA7F83171F49F5F700870C27 /* AddContactVC.swift */,
 			);
@@ -296,6 +304,7 @@
 				TargetAttributes = {
 					DA9828981F3E2E880084D25E = {
 						CreatedOnToolsVersion = 8.3.3;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 					DA9828AF1F3E2E880084D25E = {
@@ -368,11 +377,13 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Contactless/Pods-Contactless-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/DZNEmptyDataSet/DZNEmptyDataSet.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac-f0850809/GoogleToolboxForMac.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DZNEmptyDataSet.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 			);
@@ -435,9 +446,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ContactlessTests/Pods-ContactlessTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac-Defines-NSData+zlib/GoogleToolboxForMac.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -450,9 +464,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ContactlessUITests/Pods-ContactlessUITests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac-Defines-NSData+zlib/GoogleToolboxForMac.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -517,10 +534,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA24C1981F58F15A00E6F99A /* Contactless-Bridging-Header.m in Sources */,
 				DA9828D01F3E314B0084D25E /* ContactCell.swift in Sources */,
 				DA9828D41F3E31A70084D25E /* DataService.swift in Sources */,
 				DA98289F1F3E2E880084D25E /* ContactListVC.swift in Sources */,
 				DADD03121F3E6D00008388E4 /* MaterialButton.swift in Sources */,
+				DA24C19A1F5A720500E6F99A /* TableState.swift in Sources */,
 				DADD03141F451654008388E4 /* CircularImageView.swift in Sources */,
 				DA9828D81F3E37F10084D25E /* Contact.swift in Sources */,
 				DA98289D1F3E2E880084D25E /* AppDelegate.swift in Sources */,
@@ -682,11 +701,14 @@
 			baseConfigurationReference = C87EAC8C6FBF56DC926E63C0 /* Pods-Contactless.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Contactless/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.self.Contactless;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Contactless/Contactless-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -696,11 +718,13 @@
 			baseConfigurationReference = F4F8203822DCC46CF37375D7 /* Pods-Contactless.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Contactless/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.self.Contactless;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Contactless/Contactless-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

@@ -10,6 +10,7 @@ target 'Contactless' do
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'Firebase/Storage'
+  pod 'DZNEmptyDataSet'
   
   target 'ContactlessTests' do
     inherit! :search_paths

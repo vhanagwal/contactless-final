@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0EDA9B7932C61009D10070AE975F1394"
-               BuildableName = "Pods_ContactlessTests.framework"
-               BlueprintName = "Pods-ContactlessTests"
+               BlueprintIdentifier = "433E90BF6136E433A0FEA61CD4159E56"
+               BuildableName = "GoogleToolboxForMac.framework"
+               BlueprintName = "GoogleToolboxForMac-Defines-NSData+zlib"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0EDA9B7932C61009D10070AE975F1394"
-            BuildableName = "Pods_ContactlessTests.framework"
-            BlueprintName = "Pods-ContactlessTests"
+            BlueprintIdentifier = "433E90BF6136E433A0FEA61CD4159E56"
+            BuildableName = "GoogleToolboxForMac.framework"
+            BlueprintName = "GoogleToolboxForMac-Defines-NSData+zlib"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

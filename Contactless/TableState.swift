@@ -6,4 +6,20 @@
 //  Copyright © 2017 Vardhan Agrawal. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+enum TableState {
+  case Loading
+  case Failed
+  case Loaded([Contact])
+  case Empty
+  
+  var count: Int {
+    switch self {
+    case let .Loaded(items):
+      return items.count
+    default:
+      return 0
+    }
+  }
+}

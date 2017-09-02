@@ -30,8 +30,9 @@
 
 import UIKit
 import Firebase
+import DZNEmptyDataSet
 
-class ContactListVC: UIViewController {
+class ContactListVC: UITableViewController, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
   
   // TableView from Interface Builder
   @IBOutlet var tableview: UITableView!
@@ -39,13 +40,18 @@ class ContactListVC: UIViewController {
   // Contacts array declaration
   var contacts: [Contact] = []
   
+  var tableState = TableState.Loading {
+    didSet {
+      self.tableview.reloadData()
+    }
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    // TableView setup
-    self.tableview.delegate = self
-    self.tableview.dataSource = self
-    self.tableview.allowsSelection = false
+    tableView.emptyDataSetSource = self
+    tableView.emptyDataSetDelegate = self
+    tableView.tableFooterView = UIView()
     
     observeDatabase()
   }
@@ -66,6 +72,8 @@ class ContactListVC: UIViewController {
     
     DataService.shared.REF_CONTACTS.observe(.value, with: { (snapshots) in
       
+      self.tableState = .Loading
+      
       if let snapshots = snapshots.children.allObjects as? [DataSnapshot] {
         
         self.contacts = []
@@ -81,19 +89,58 @@ class ContactListVC: UIViewController {
         }
       }
       
-      self.tableview.reloadData()
+      self.tableState = .Loaded(self.contacts)
+      
+      if self.contacts.count == 0 {
+        self.tableState = .Empty
+      }
     })
   }
-}
-
-extension ContactListVC: UITableViewDelegate, UITableViewDataSource {
   
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
     
-    return contacts.count
+    var str = ""
+    switch tableState {
+    case .Failed: str = "Cannot Connect"
+    case .Loading: str = "Loading"
+    default: str = "No Contacts"
+    }
+    
+    let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.title1)]
+    return NSAttributedString(string: str, attributes: attrs)
   }
   
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+  func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
+    
+    var str = ""
+    switch tableState {
+    case .Failed: str = "There was an error loading your contacts. Please check your connection and try again at a later time."
+    case .Loading: str = "We are fetching your contacts from our servers. Please wait..."
+    default: str = "Welcome to Contactless! Add your first contact by tapping the button above."
+    }
+    
+    let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)]
+    return NSAttributedString(string: str, attributes: attrs)
+  }
+  
+  func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
+    switch tableState {
+    case .Failed: return #imageLiteral(resourceName: "no_connection")
+    case .Loading: return #imageLiteral(resourceName: "loading")
+    default: return #imageLiteral(resourceName: "empty")
+    }
+  }
+  
+}
+
+extension ContactListVC {
+  
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    return tableState.count
+  }
+  
+  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     // Creates reusable cell
     let cell = tableview.dequeueReusableCell(withIdentifier: "contactCell") as! ContactCell
