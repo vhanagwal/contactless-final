@@ -32,7 +32,11 @@ import UIKit
 import Firebase
 import DZNEmptyDataSet
 
-class ContactListVC: UITableViewController, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+
+class ContactListVC: UITableViewController {
+  
+  let limit = 75.0
+  var isLoadingMore = false
   
   // TableView from Interface Builder
   @IBOutlet var tableview: UITableView!
@@ -42,9 +46,10 @@ class ContactListVC: UITableViewController, DZNEmptyDataSetSource, DZNEmptyDataS
   
   var tableState = TableState.Loading {
     didSet {
+      isLoadingMore = true
       self.tableview.reloadData()
     }
-  }
+}
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -54,11 +59,6 @@ class ContactListVC: UITableViewController, DZNEmptyDataSetSource, DZNEmptyDataS
     tableView.tableFooterView = UIView()
     
     observeDatabase()
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -73,6 +73,7 @@ class ContactListVC: UITableViewController, DZNEmptyDataSetSource, DZNEmptyDataS
     DataService.shared.REF_CONTACTS.observe(.value, with: { (snapshots) in
       
       self.tableState = .Loading
+      self.isLoadingMore = true
       
       if let snapshots = snapshots.children.allObjects as? [DataSnapshot] {
         
@@ -90,54 +91,53 @@ class ContactListVC: UITableViewController, DZNEmptyDataSetSource, DZNEmptyDataS
       }
       
       self.tableState = .Loaded(self.contacts)
+      self.isLoadingMore = false
       
       if self.contacts.count == 0 {
         self.tableState = .Empty
+        self.isLoadingMore = false
       }
     })
   }
   
-  func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-    
-    var str = ""
-    switch tableState {
-    case .Failed: str = "Cannot Connect"
-    case .Loading: str = "Loading"
-    default: str = "No Contacts"
-    }
-    
-    let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.title1)]
-    return NSAttributedString(string: str, attributes: attrs)
-  }
-  
-  func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-    
-    var str = ""
-    switch tableState {
-    case .Failed: str = "There was an error loading your contacts. Please check your connection and try again at a later time."
-    case .Loading: str = "We are fetching your contacts from our servers. Please wait..."
-    default: str = "Welcome to Contactless! Add your first contact by tapping the button above."
-    }
-    
-    let attrs = [NSFontAttributeName: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)]
-    return NSAttributedString(string: str, attributes: attrs)
-  }
-  
-  func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
-    switch tableState {
-    case .Failed: return #imageLiteral(resourceName: "no_connection")
-    case .Loading: return #imageLiteral(resourceName: "loading")
-    default: return #imageLiteral(resourceName: "empty")
+  func removeContact(with identifier: String) {
+    DataService.shared.REF_CONTACTS.child(identifier).removeValue { (error, reference) in
+      print("deleted")
     }
   }
-  
 }
 
-extension ContactListVC {
+extension ContactListVC: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
   
-  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  // MARK: - Pagination
+  func scrollViewDidScroll(scrollView: UIScrollView) {
+    let contentOffset = scrollView.contentOffset.y
+    let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
     
-    return tableState.count
+    if !isLoadingMore && (maximumOffset - contentOffset <= CGFloat(limit)) {
+      
+      observeDatabase()
+      self.isLoadingMore = true
+      
+      // Update UI
+      DispatchQueue.main.async() {
+        self.tableView.reloadData()
+        self.isLoadingMore = false
+      }
+    }
+  }
+  
+  // MARK: - TableView Methods
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return contacts.count
+  }
+  
+  override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    if editingStyle == .delete {
+      removeContact(with: contacts[indexPath.row].userID)
+      contacts.remove(at: indexPath.row)
+      tableview.deleteRows(at: [indexPath], with: .automatic)
+    }
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -153,5 +153,41 @@ extension ContactListVC {
     
     return cell
   }
+  
+  // MARK: - Empty Data State
+  func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
+    
+    var str = ""
+    switch tableState {
+    case .Failed: str = "Cannot Connect"
+    case .Loading: str = "Loading"
+    default: str = "No Contacts"
+    }
+    
+    let attrs = [NSAttributedStringKey.font: UIFont.preferredFont(forTextStyle: UIFontTextStyle.title1)]
+    return NSAttributedString(string: str, attributes: attrs)
+  }
+
+  func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
+    
+    var str = ""
+    switch tableState {
+    case .Failed: str = "There was an error loading your contacts. Please check your connection and try again at a later time."
+    case .Loading: str = "We are fetching your contacts from our servers. Please wait..."
+    default: str = "Welcome to Contactless! Add your first contact by tapping the button above."
+    }
+    
+    let attrs = [NSAttributedStringKey.font: UIFont.preferredFont(forTextStyle: UIFontTextStyle.headline)]
+    return NSAttributedString(string: str, attributes: attrs)
+  }
+  
+  func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
+    switch tableState {
+    case .Failed: return #imageLiteral(resourceName: "no_connection")
+    case .Loading: return #imageLiteral(resourceName: "loading")
+    default: return #imageLiteral(resourceName: "empty")
+    }
+  }
 }
+
 

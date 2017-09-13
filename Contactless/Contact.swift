@@ -32,12 +32,13 @@ import UIKit
 
 struct Contact {
   
-  // MARK: Stored Properties
+  // MARK: - Stored Properties
   var userID: String
   var name: String
   var email: String
   var phone: String
   
+  // MARK: - Initializers
   // MARK: Default Initializer
   init() {
     

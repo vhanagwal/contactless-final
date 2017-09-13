@@ -34,15 +34,19 @@ import Firebase
 
 class AddContactVC: UIViewController {
   
-  // MARK: IBOutlet Connections
+  // MARK: - Parameters
+  // MARK: Outlet Connections
   @IBOutlet weak var nameLabel: UITextField!
   @IBOutlet weak var phoneLabel: UITextField!
   @IBOutlet weak var emailAddress: UITextField!
   @IBOutlet weak var imageView: CircularImageView!
   
+  // MARK: Keyboard Parameters
   let keyboardOffset: CGFloat = -80
   let yOrigin: CGFloat = 0
   
+  // MARK: - Methods
+  // MARK: Setup
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -51,52 +55,52 @@ class AddContactVC: UIViewController {
     view.addGestureRecognizer(tap)
     
     NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-    
     NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
   }
   
+  // MARK: Keyboard Methods
   //Calls this function when the tap is recognized.
-  func dismissKeyboard() {
+  @objc func dismissKeyboard() {
     
+    // Dismisses the keyboard
     view.endEditing(true)
   }
   
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-  
-  func addToDatabase() {
-    
-    guard let name = nameLabel.text,
-      let phone = phoneLabel.text,
-      let email = emailAddress.text else { return }
-    
-    let newContact = DataService.shared.REF_CONTACTS.childByAutoId()
-    newContact.updateChildValues([
-      "name" : name,
-      "phone" : phone,
-      "email": email
-      ])
-    
-  }
-  
-  func keyboardWillShow() {
+  @objc func keyboardWillShow() {
     
     // Moves the view up to show all text fields
     self.view.frame.origin.y = keyboardOffset
   }
   
-  func keyboardWillHide() {
+  @objc func keyboardWillHide() {
     
     // Returns the view to its original position when editing is complete
     self.view.frame.origin.y = yOrigin
     
   }
   
+  // MARK: Database Communication
+  func addToDatabase() {
+    
+    // Safely unwraps name, phone, and email variables
+    guard let name = nameLabel.text,
+      let phone = phoneLabel.text,
+      let email = emailAddress.text else { return }
+    
+    // Adds contact to the Database
+    let newContact = DataService.shared.REF_CONTACTS.childByAutoId()
+    newContact.updateChildValues([
+      "name" : name,
+      "phone" : phone,
+      "email": email
+      ])
+  }
+  
+  // MARK: IBActions
   @IBAction func createContactTapped() {
     
     addToDatabase()
+    
     navigationController?.popToRootViewController(animated: true)
   }
 }

@@ -32,7 +32,7 @@ import UIKit
 
 class ContactCell: UITableViewCell {
   
-  // MARK: IBOutlets
+  // IBOutlets
   @IBOutlet weak var nameLabel: UILabel!
   @IBOutlet weak var emailLabel: UILabel!
   @IBOutlet weak var phoneLabel: UILabel!

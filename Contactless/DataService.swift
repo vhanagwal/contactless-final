@@ -35,8 +35,10 @@ let databaseReference = Database.database().reference()
 
 class DataService {
   
+  // Singleton declaration
   static let shared = DataService()
   
+  // Reference to contacts within Database
   var REF_CONTACTS: DatabaseReference = databaseReference.child("contacts")
   
 }
