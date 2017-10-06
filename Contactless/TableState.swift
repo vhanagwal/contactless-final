@@ -13,13 +13,4 @@ enum TableState {
   case Failed
   case Loaded([Contact])
   case Empty
-  
-  var count: Int {
-    switch self {
-    case let .Loaded(items):
-      return items.count
-    default:
-      return 0
-    }
-  }
 }

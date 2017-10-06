@@ -36,7 +36,6 @@ import DZNEmptyDataSet
 class ContactListVC: UITableViewController {
   
   let limit = 75.0
-  var isLoadingMore = false
   
   // TableView from Interface Builder
   @IBOutlet var tableview: UITableView!
@@ -46,7 +45,6 @@ class ContactListVC: UITableViewController {
   
   var tableState = TableState.Loading {
     didSet {
-      isLoadingMore = true
       self.tableview.reloadData()
     }
 }
@@ -73,7 +71,6 @@ class ContactListVC: UITableViewController {
     DataService.shared.REF_CONTACTS.observe(.value, with: { (snapshots) in
       
       self.tableState = .Loading
-      self.isLoadingMore = true
       
       if let snapshots = snapshots.children.allObjects as? [DataSnapshot] {
         
@@ -91,18 +88,18 @@ class ContactListVC: UITableViewController {
       }
       
       self.tableState = .Loaded(self.contacts)
-      self.isLoadingMore = false
       
       if self.contacts.count == 0 {
         self.tableState = .Empty
-        self.isLoadingMore = false
       }
     })
   }
   
   func removeContact(with identifier: String) {
+    tableState = .Loading
     DataService.shared.REF_CONTACTS.child(identifier).removeValue { (error, reference) in
       print("deleted")
+      self.tableState = .Loaded(self.contacts)
     }
   }
 }
@@ -114,15 +111,16 @@ extension ContactListVC: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
     let contentOffset = scrollView.contentOffset.y
     let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
     
-    if !isLoadingMore && (maximumOffset - contentOffset <= CGFloat(limit)) {
+    if (maximumOffset - contentOffset <= CGFloat(limit)) {
       
-      observeDatabase()
-      self.isLoadingMore = true
+      switch tableState {
+      case .Loading: break
+      default: observeDatabase()
+      }
       
       // Update UI
       DispatchQueue.main.async() {
         self.tableView.reloadData()
-        self.isLoadingMore = false
       }
     }
   }
