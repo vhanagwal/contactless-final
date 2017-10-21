@@ -31,7 +31,6 @@
 import UIKit
 import Firebase
 
-
 class AddContactVC: UIViewController {
   
   // MARK: - Parameters
