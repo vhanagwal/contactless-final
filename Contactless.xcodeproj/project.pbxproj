@@ -24,6 +24,7 @@
 		DA9828D01F3E314B0084D25E /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9828CF1F3E314B0084D25E /* ContactCell.swift */; };
 		DA9828D41F3E31A70084D25E /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9828D31F3E31A70084D25E /* DataService.swift */; };
 		DA9828D81F3E37F10084D25E /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9828D71F3E37F10084D25E /* Contact.swift */; };
+		DAA908F61F9AEF2B007B472A /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA908F51F9AEF2B007B472A /* DataSource.swift */; };
 		DADD030E1F3E656C008388E4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DADD030D1F3E656C008388E4 /* GoogleService-Info.plist */; };
 		DADD03101F3E683A008388E4 /* MaterialTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD030F1F3E683A008388E4 /* MaterialTextField.swift */; };
 		DADD03121F3E6D00008388E4 /* MaterialButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD03111F3E6D00008388E4 /* MaterialButton.swift */; };
@@ -75,6 +76,7 @@
 		DA9828CF1F3E314B0084D25E /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
 		DA9828D31F3E31A70084D25E /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		DA9828D71F3E37F10084D25E /* Contact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
+		DAA908F51F9AEF2B007B472A /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		DADD030D1F3E656C008388E4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DADD030F1F3E683A008388E4 /* MaterialTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaterialTextField.swift; sourceTree = "<group>"; };
 		DADD03111F3E6D00008388E4 /* MaterialButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaterialButton.swift; sourceTree = "<group>"; };
@@ -212,6 +214,7 @@
 		DADC9D301F4E6DD800141650 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				DAA908F51F9AEF2B007B472A /* DataSource.swift */,
 				DA9828D71F3E37F10084D25E /* Contact.swift */,
 			);
 			name = Model;
@@ -536,6 +539,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAA908F61F9AEF2B007B472A /* DataSource.swift in Sources */,
 				DA24C1981F58F15A00E6F99A /* Contactless-Bridging-Header.m in Sources */,
 				DA9828D01F3E314B0084D25E /* ContactCell.swift in Sources */,
 				DA9828D41F3E31A70084D25E /* DataService.swift in Sources */,

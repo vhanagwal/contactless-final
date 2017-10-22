@@ -30,27 +30,12 @@
 
 import UIKit
 
-struct Contact {
+class DataSource {
   
-  // MARK: Stored Properties
-  var name: String
-  var email: String
-  var phone: String
+  static let shared = DataSource()
   
-  // MARK: Default Initializer
-  init() {
-    
-    // Prevents crashes in case of empty data sets
-    self.name = ""
-    self.email = ""
-    self.phone = ""
-  }
-  
-  // MARK: Complete Initializer
-  init(name: String, email: String, phone: String) {
-    
-    self.name = name
-    self.email = email
-    self.phone = phone
-  }
+  var contactArray: [Contact] = [
+    Contact(name: "Bill Robinson", email: "bill@example.com", phone: "+1 (555) 932-8399"),
+    Contact(name: "Anne Reed", email: "anne@example.com", phone: "+1 (555) 839-1421")
+  ]
 }

@@ -29,7 +29,6 @@
  */
 
 import UIKit
-import Firebase
 
 class AddContactVC: UIViewController {
   
@@ -79,27 +78,21 @@ class AddContactVC: UIViewController {
   }
   
   // MARK: Database Communication
-  func addToDatabase() {
+  func addContact() {
     
-    // Safely unwraps name, phone, and email variables
     guard let name = nameLabel.text,
       let phone = phoneLabel.text,
       let email = emailAddress.text else { return }
     
-    // Adds contact to the Database
-    let newContact = DataService.shared.REF_CONTACTS.childByAutoId()
-    newContact.updateChildValues([
-      "name" : name,
-      "phone" : phone,
-      "email": email
-      ])
+    DataSource.shared.contactArray.append(Contact(name: name, email: email, phone: phone))
+    print(DataSource.shared.contactArray)
+    
   }
   
   // MARK: IBActions
   @IBAction func createContactTapped() {
     
-    addToDatabase()
-    
+    addContact()
     navigationController?.popToRootViewController(animated: true)
   }
 }

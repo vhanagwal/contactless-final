@@ -29,13 +29,14 @@
  */
 
 import UIKit
-import Firebase
 import DZNEmptyDataSet
 
 
 class ContactListVC: UITableViewController {
   
   let limit = 75.0
+  
+  var timer: Timer?
   
   // TableView from Interface Builder
   @IBOutlet var tableview: UITableView!
@@ -56,7 +57,7 @@ class ContactListVC: UITableViewController {
     tableView.emptyDataSetDelegate = self
     tableView.tableFooterView = UIView()
     
-    observeDatabase()
+    self.getData()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -65,77 +66,46 @@ class ContactListVC: UITableViewController {
     }
   }
   
-  // Observes the database for changes
-  func observeDatabase() {
-    
-    DataService.shared.REF_CONTACTS.observe(.value, with: { (snapshots) in
-      
-      self.tableState = .Loading
-      
-      if let snapshots = snapshots.children.allObjects as? [DataSnapshot] {
-        
-        self.contacts = []
-        
-        for snapshot in snapshots {
-          
-          if let dictionary = snapshot.value as? Dictionary <String, AnyObject> {
-            
-            let key = snapshot.key
-            let contact = Contact(userID: key, data: dictionary)
-            self.contacts.append(contact)
-          }
-        }
-      }
-      
-      self.tableState = .Loaded(self.contacts)
-      
-      if self.contacts.count == 0 {
-        self.tableState = .Empty
-      }
-    })
+  // Creates artificial delay to getData()
+  func getData() {
+    tableState = .Loading
+    timer = Timer.scheduledTimer(timeInterval: TimeInterval(Int(arc4random_uniform(15))), target: self, selector: #selector(retrieve), userInfo: nil, repeats: false)
   }
   
-  func removeContact(with identifier: String) {
-    tableState = .Loading
-    DataService.shared.REF_CONTACTS.child(identifier).removeValue { (error, reference) in
-      print("deleted")
-      self.tableState = .Loaded(self.contacts)
+  // Retrieves data
+  @objc func retrieve() {
+    // Randomly creates an error
+    let error = randomBool()
+    
+    if !error {
+      contacts = DataSource.shared.contactArray
+      tableState = .Loaded(DataSource.shared.contactArray)
+      
+      if DataSource.shared.contactArray.isEmpty {
+        tableState = .Empty
+      }
+      
+    } else if error {
+      contacts = []
+      tableState = .Failed
     }
+    self.tableview.reloadData()
+  }
+  
+  func randomBool() -> Bool {
+    return arc4random_uniform(2) == 0
+  }
+  
+  @IBAction func reloadButtonTapped(_ sender: UIBarButtonItem) {
+    getData()
   }
 }
 
 extension ContactListVC: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
   
-  // MARK: - Pagination
-  func scrollViewDidScroll(scrollView: UIScrollView) {
-    let contentOffset = scrollView.contentOffset.y
-    let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height;
-    
-    if (maximumOffset - contentOffset <= CGFloat(limit)) {
-      
-      switch tableState {
-      case .Loading: break
-      default: observeDatabase()
-      }
-      
-      // Update UI
-      DispatchQueue.main.async() {
-        self.tableView.reloadData()
-      }
-    }
-  }
-  
   // MARK: - TableView Methods
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return contacts.count
-  }
-  
-  override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-    if editingStyle == .delete {
-      removeContact(with: contacts[indexPath.row].userID)
-      contacts.remove(at: indexPath.row)
-      tableview.deleteRows(at: [indexPath], with: .automatic)
-    }
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -150,6 +120,14 @@ extension ContactListVC: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
     cell.phoneLabel.text = contact.phone
     
     return cell
+  }
+  
+  override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    if editingStyle == .delete {
+      contacts.remove(at: indexPath.row)
+      DataSource.shared.contactArray = contacts
+      tableView.deleteRows(at: [indexPath], with: .fade)
+    }
   }
   
   // MARK: - Empty Data State
